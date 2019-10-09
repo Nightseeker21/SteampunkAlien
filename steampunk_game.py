@@ -22,8 +22,10 @@ Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 alien_image1 = pygame.image.load('images/bluerobot.png')
 alien_image2 = pygame.image.load('images/greenrobot.png')
 alien_image3 = pygame.image.load('images/purplerobot.png')
-alien_image4 = pygame.image.load('images/redrobot.png')
-alien_image5 = pygame.image.load('images/yellowrobot.png')
+
+main_song = pygame.mixer.Sound('sounds/airship.mp3')
+cannon_sound = pygame.mixer.Sound('sounds/cannon.wav')
+
 
 def terminate():
     pygame.quit()
@@ -39,19 +41,6 @@ def PlayerPressKey():
                     terminate()
                 return
 
-def you_win_text():
-    font = pygame.font.SysFont(None, 48)
-    font_large = pygame.font.SysFont(None, 48)
-    text1 = font_large.render("Congratulations", True, TEXTCOLOR)
-    Surface.blit(text1, (60, WINDOWHEIGHT/2))
-    pygame.display.update()
-
-def gameover():
-    font = pygame.font.SysFont(None, 48)
-    font_large = pygame.font.SysFont(None, 48)
-    text2 = font_large.render()
-    Surface.blit(text2, (180, WINDOWHEIGHT/2 - 50))
-
 class Steampunk:
     def __init__(self):
         self.settings = Settings()
@@ -61,10 +50,6 @@ class Steampunk:
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Robot Invasion")
 
-        # Sounds
-        #cannon_sound = pygame.mixer.Sound('sounds/cannon.wav')
-        #main_menu_music = pygame.mixer.Sound('sounds/airship.mp3')
-
         self.stats = GameStats(self)
         self.sb = Scoreboard(self)
 
@@ -73,10 +58,6 @@ class Steampunk:
         self.robots = pygame.sprite.Group()
 
         self.create_fleet()
-
-        Main_Menu(None, None)
-        pygame.display.update()
-        PlayerPressKey()
 
     def run_game(self):
         while True:
@@ -134,6 +115,10 @@ class Steampunk:
                 self.stats.score += self.settings.alien_points * len(robots)
             self.sb.prep_score()
             self.sb.check_high_score()
+
+        if pygame.sprite.collide_mask(self.bullets, robots):
+            pygame.mixer.music.stop()
+            cannon_sound.play()
 
         if not self.robots:
             self.bullets.empty()
@@ -220,6 +205,29 @@ class Steampunk:
 
         pygame.display.flip()
 
-Steampunk()
+def play():
+    Main_Menu(None, None)
+    pygame.display.update()
+    PlayerPressKey()
+
+    Steampunk()
+    game_on = True
+
+    while game_on:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_on = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                    game_on = False
+
+    pygame.display.update()
+    PlayerPressKey()
+
+play()
+
+
+
+
 
 
