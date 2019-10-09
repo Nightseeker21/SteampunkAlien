@@ -23,7 +23,6 @@ alien_image1 = pygame.image.load('images/bluerobot.png')
 alien_image2 = pygame.image.load('images/greenrobot.png')
 alien_image3 = pygame.image.load('images/purplerobot.png')
 
-main_song = pygame.mixer.Sound('sounds/airship.mp3')
 cannon_sound = pygame.mixer.Sound('sounds/cannon.wav')
 
 
