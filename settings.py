@@ -1,3 +1,5 @@
+from bullet import Bullet
+
 class Settings:
     def __init__(self):
         self.screen_width = 1200
@@ -34,3 +36,8 @@ class Settings:
         self.alien_speed *= self.speedup_scale
 
         self.alien_points = int(self.alien_points * self.score_scale)
+
+    def fire_cannon(self):
+        if len(self.bullets) < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
